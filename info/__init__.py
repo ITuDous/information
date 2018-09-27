@@ -35,7 +35,7 @@ def create_app(config_type):
     app = Flask(__name__)
 
     #  csrf保护
-    CSRFProtect(app)
+    # CSRFProtect(app)
 
     #  从对象加载配置信息
     app.config.from_object(config_class)
@@ -46,7 +46,7 @@ def create_app(config_type):
     db = SQLAlchemy(app)
 
     #  配置redis
-    redis_store = redis.StrictRedis(host=config_class.REDIS_HOST, port=config_class.REDIS_PORT)
+    redis_store = redis.StrictRedis(host=config_class.REDIS_HOST, port=config_class.REDIS_PORT,decode_responses=True)
 
     #  配置session保存位置
     Session(app)

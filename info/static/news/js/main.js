@@ -5,6 +5,44 @@ $(function () {
         $('.login_form_con').show();
     })
 
+    // 登录表单提交
+    $(".login_form_con").submit(function (e) {
+        e.preventDefault()
+        var mobile = $(".login_form #mobile").val()
+        var password = $(".login_form #password").val()
+
+        if (!mobile) {
+            $("#login-mobile-err").show();
+            return;
+        }
+
+        if (!password) {
+            $("#login-password-err").show();
+            return;
+        }
+
+        var params = {
+            "mobile": mobile,
+            "password": password,
+        }
+
+        $.ajax({
+            url: "/passport/login",
+            method: "post",
+            data: JSON.stringify(params),
+            contentType: "application/json",
+            success: function (resp) {
+                if (resp.errno == "0") {
+                    // 刷新当前界面
+                    location.reload();
+                } else {
+                    $("#login-password-err").html(resp.errmsg)
+                    $("#login-password-err").show()
+                }
+            }
+        })
+    })
+
     // 点击关闭按钮关闭登录框或者注册框
     $('.shutoff').click(function () {
         $(this).closest('form').hide();
@@ -53,6 +91,58 @@ $(function () {
     $('.register_btn').click(function () {
         $('.register_form_con').show();
         generateImageCode()
+    })
+
+    // 注册表单提交
+    $(".register_form_con").submit(function (e) {
+        e.preventDefault()
+
+        // 取到用户输入的内容
+        var mobile = $("#register_mobile").val()
+        var smscode = $("#smscode").val()
+        var password = $("#register_password").val()
+
+        if (!mobile) {
+            $("#register-mobile-err").show();
+            return;
+        }
+        if (!smscode) {
+            $("#register-sms-code-err").show();
+            return;
+        }
+        if (!password) {
+            $("#register-password-err").html("请填写密码!");
+            $("#register-password-err").show();
+            return;
+        }
+
+        if (password.length < 6) {
+            $("#register-password-err").html("密码长度不能少于6位");
+            $("#register-password-err").show();
+            return;
+        }
+
+        var params = {
+            "mobile": mobile,
+            "smscode": smscode,
+            "password": password,
+        }
+
+        $.ajax({
+            url: "/passport/register",
+            type: "post",
+            data: JSON.stringify(params),
+            contentType: "application/json",
+            success: function (resp) {
+                if (resp.errno == "0") {
+                    // 刷新当前界面
+                    location.reload()
+                } else {
+                    $("#register-password-err").html(resp.errmsg)
+                    $("#register-password-err").show()
+                }
+            }
+        })
     })
 
 

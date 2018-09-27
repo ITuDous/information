@@ -58,6 +58,18 @@ class User(BaseModel, db.Model):
     # 当前用户所发布的新闻
     news_list = db.relationship('News', backref='user', lazy='dynamic')
 
+    # 使用计算型属性来封装加密过程
+    @property
+    def password(self):
+        raise AttributeError("不可读")
+
+    @password.setter
+    def password(self, value):
+        self.password_hash = generate_password_hash(value)
+
+    def check_password(self, value):
+        return check_password_hash(self.password_hash, value)
+
     def to_dict(self):
         resp_dict = {
             "id": self.id,
