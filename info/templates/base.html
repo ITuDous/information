@@ -2,92 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>首页-新经资讯</title>
+    {% block title_block %}
+    
+    {% endblock %}
     <link rel="stylesheet" type="text/css" href="../static/news/css/reset.css">
     <link rel="stylesheet" type="text/css" href="../static/news/css/main.css">
     <script type="text/javascript" src="../static/news/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="../static/news/js/main.js"></script>
-    <script type="text/javascript" src="../static/news/js/index.js"></script>
-    <!-- import CSS -->
-    <!--<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-    <style>
-        .el-carousel__item h3 {
-            color: #475669;
-            font-size: 14px;
-            opacity: 0.75;
-            line-height: 200px;
-            margin: 0;
-        }
-
-        .el-carousel__item:nth-child(2n) {
-            background-color: #99a9bf;
-        }
-
-        .el-carousel__item:nth-child(2n+1) {
-            background-color: #d3dce6;
-        }
-    </style>
-    -->
+    {% block script_block %}
+    
+    {% endblock %}
 </head>
 <body>
 <div class="header_con">
     <div class="header">
-        <a href="#" class="logo fl"><img src="../static/news/images/logo.png" alt="logo"></a>
-        <ul class="menu fl">
-            {% for category in categories %}
-                <li {% if loop.index == 1 %} class="active" {% endif %} data-cid="{{ category.id }}"><a
-                        href="javascript:;">{{ category.name }}</a></li>
-            {% endfor %}
+        <a href="/" class="logo fl"><img src="../static/news/images/logo.png" alt="logo"></a>
+        {% block category_block %}
+        
+        {% endblock %}
 
-        </ul>
+        {# 判断用户是否登录 #}
         {% if user %}
+
             <div class="user_login fr">
-                <img
-                        {% if user.avatar_url %} } src="{{ user.avatar_url }}" {% else %}
-                                                 src="../static/news/images/person01.png" {% endif %}class="lgin_pic">
+                <img {% if user.avatar_url %}src="{{ user.avatar_url }}" {% else %}
+                     src="../static/news/images/person01.png"{% endif %} class="lgin_pic">
                 <a href="#" id="nick_name">{{ user.nick_name }}</a>
                 <a href="javascript:;" onclick="logout()">退出</a>
             </div>
+
         {% else %}
+
             <div class="user_btns fr">
                 <a href="javascript:;" class="login_btn">登录</a> / <a href="javascript:;" class="register_btn">注册</a>
             </div>
+
         {% endif %}
 
     </div>
 </div>
 
-<!--
-<div id="app">
-    <template>
-        <el-carousel :interval="4000" type="card" height="400px">
-            <el-carousel-item v-for="item in 6" :key="item">
-                {% for news in news_list %}
-                    <li>
-                        <img src="{{ news.index_image_url }}" alt="">
-                        <a href="/news/1">{{ news.title }}</a>
-                    </li>
-                {% endfor %}
-
-            </el-carousel-item>
-        </el-carousel>
-    </template>
-</div>
-</body>
-<!-- import Vue before Element -->
-<!--<script src="https://unpkg.com/vue/dist/vue.js"></script>
-<!-- import JavaScript -->
-<!--<script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script>
-    new Vue().$mount('#app')
-</script>
--->
-
 <div class="conter_con">
-    <ul class="list_con fl">
+{% block content_block %}
 
-    </ul>
+{% endblock %}
+
+
     <div class="rank_con fr">
+        {% block author_block %}
+
+        {% endblock %}
         <div class="rank_title">
             <h3>点击排行</h3>
         </div>
@@ -96,9 +60,9 @@
                 <li><span class="{{ loop.index | index_convert }}">{{ loop.index }}</span><a
                         href="/news/1">{{ news.title }}</a></li>
             {% endfor %}
-
         </ul>
     </div>
+
 </div>
 <div class="footer">
     <div class="footer_links">

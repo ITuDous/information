@@ -149,3 +149,49 @@ def register():
 
     return jsonify(errno=RET.OK, errmsg=error_map[RET.OK])
 
+
+@passport_blu.route('/login', methods=["POST"])
+def login():
+    # 获取参数
+    mobile = request.json.get("mobile")
+    password = request.json.get("password")
+
+    if not all([mobile, password]):
+        return jsonify(errno=RET.PARAMERR, errmsg=error_map[RET.PARAMERR])
+
+    # 校验用户名
+    if not mobile:
+        return jsonify(errno=RET.PARAMERR, errmsg=error_map[RET.PARAMERR])
+    if not re.match(r"1[35678]\d{9}$", mobile):
+        return jsonify(errno=RET.PARAMERR, errmsg="手机号格式不正确")
+
+    try:
+        user = User.query.filter_by(mobile=mobile).first()
+    except BaseException as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.DATAEXIST, errmsg=error_map[RET.DATAEXIST])
+
+    if not user:
+        return jsonify(errno=RET.USERERR, errmsg=error_map[RET.USERERR])
+
+    if not user.check_password(password):
+        return jsonify(errno=RET.DATAEXIST, errmsg="密码错误")
+
+    # 保存用户登录状态
+    session["user_id"] = user.id
+    # 记录用户最后一次登录时间
+    user.last_login = datetime.now()
+    try:
+        db.session.commit()
+    except Exception as e:
+        current_app.logger.error(e)
+    # 登录成功
+    return jsonify(errno=RET.OK, errmsg="OK")
+
+
+@passport_blu.route('/logout')
+def logout():
+    # 删除session中的user_id
+    session.pop("user_id", None)
+    # 将结果以json返回
+    return jsonify(errno=RET.OK, errmsg=error_map[RET.OK])

@@ -11,6 +11,8 @@ from config import config_dict
 
 
 #  设置数据库连接对象
+from info.common import func_index_convert
+
 db = None  # type:SQLAlchemy
 redis_store = None  # type:redis.StrictRedis
 
@@ -59,12 +61,17 @@ def create_app(config_type):
     app.register_blueprint(home_blu)
     from info.modules.passport import passport_blu
     app.register_blueprint(passport_blu)
+    from info.modules.news import news_blu
+    app.register_blueprint(news_blu)
 
     #  配置文件
     setup_log(config_class.LOG_LEVEL)
 
     #  关联文件
     import info.models
+
+    # 添加过滤器
+    app.add_template_filter(func_index_convert, "index_convert")
 
     return app
 
