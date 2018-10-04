@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     {% block title_block %}
-    
+
     {% endblock %}
     <link rel="stylesheet" type="text/css" href="../static/news/css/reset.css">
     <link rel="stylesheet" type="text/css" href="../static/news/css/main.css">
     <script type="text/javascript" src="../static/news/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="../static/news/js/main.js"></script>
     {% block script_block %}
-    
+
     {% endblock %}
 </head>
 <body>
@@ -18,7 +18,7 @@
     <div class="header">
         <a href="/" class="logo fl"><img src="../static/news/images/logo.png" alt="logo"></a>
         {% block category_block %}
-        
+
         {% endblock %}
 
         {# 判断用户是否登录 #}
@@ -58,7 +58,7 @@
         <ul class="rank_list">
             {% for news in news_list %}
                 <li><span class="{{ loop.index | index_convert }}">{{ loop.index }}</span><a
-                        href="/news/1">{{ news.title }}</a></li>
+                        href="/news/{{ news.id }}">{{ news.title }}</a></li>
             {% endfor %}
         </ul>
     </div>

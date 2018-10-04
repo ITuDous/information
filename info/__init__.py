@@ -9,10 +9,6 @@ from flask_session import Session
 from flask_migrate import Migrate
 from config import config_dict
 
-
-#  设置数据库连接对象
-from info.common import func_index_convert
-
 db = None  # type:SQLAlchemy
 redis_store = None  # type:redis.StrictRedis
 
@@ -31,32 +27,32 @@ def setup_log(log_level):
 
 
 def create_app(config_type):
-    #  根据类型取出配置类
+    # 根据类型取出配置类
     config_class = config_dict[config_type]
 
     app = Flask(__name__)
 
-    #  csrf保护
+    # csrf保护
     # CSRFProtect(app)
 
-    #  从对象加载配置信息
+    # 从对象加载配置信息
     app.config.from_object(config_class)
 
     global db, redis_store
 
-    #  配置数据库
+    # 配置数据库
     db = SQLAlchemy(app)
 
-    #  配置redis
+    # 配置redis
     redis_store = redis.StrictRedis(host=config_class.REDIS_HOST, port=config_class.REDIS_PORT,decode_responses=True)
 
-    #  配置session保存位置
+    # 配置session保存位置
     Session(app)
 
-    #  创建迁移器
+    # 创建迁移器
     Migrate(app, db)
 
-    #  注册路由
+    # 注册路由
     from info.modules.home import home_blu
     app.register_blueprint(home_blu)
     from info.modules.passport import passport_blu
@@ -64,13 +60,15 @@ def create_app(config_type):
     from info.modules.news import news_blu
     app.register_blueprint(news_blu)
 
-    #  配置文件
+    # 配置文件
     setup_log(config_class.LOG_LEVEL)
 
-    #  关联文件
+    # 关联文件
     import info.models
 
     # 添加过滤器
+    # 设置数据库连接对象
+    from info.common import func_index_convert
     app.add_template_filter(func_index_convert, "index_convert")
 
     return app
