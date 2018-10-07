@@ -23,7 +23,7 @@ def index():
     try:
         news_list = News.query.order_by(News.clicks.desc()).limit(CLICK_RANK_MAX_NEWS).all()
     except BaseException as e:
-        current_app.lgger.error(e)
+        current_app.logger.error(e)
 
     news_list = [news.to_dict() for news in news_list]
 
