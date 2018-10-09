@@ -200,7 +200,7 @@ function generateImageCode() {
     // 生成图片key
     imageCodeId = generateUUID()
     // 设置img标签的src属性(自动请求图片)
-    $(".get_pic_code").attr("src", "passport/get_img_code?img_code_id=" + imageCodeId)
+    $(".get_pic_code").attr("src", "/passport/get_img_code?img_code_id=" + imageCodeId)
 }
 
 // 发送短信验证码
