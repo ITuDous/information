@@ -425,7 +425,6 @@ def news_type():
 
         category.name = name
 
-
     else:
         news_category = Category()
         news_category.name = name

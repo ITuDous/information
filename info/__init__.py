@@ -84,4 +84,7 @@ def create_app(config_type):
 
         return render_template("news/404.html", user=user)
 
+    # 开启csrf保护
+    CSRFProtect(app)
+
     return app
