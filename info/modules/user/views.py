@@ -18,7 +18,7 @@ def user_info():
     if not user:
         return redirect('/')
 
-    return render_template("user.html", user=user.to_dict())
+    return render_template("user/user.html", user=user.to_dict())
 
 
 @user_blu.route('/base_info', methods=["GET", "POST"])
@@ -30,7 +30,7 @@ def base_info():
     if not user:
         return abort(403)
     if request.method == "GET":
-        return render_template("user_base_info.html", user=user.to_dict())
+        return render_template("user/user_base_info.html", user=user.to_dict())
 
     signature = request.json.get("signature")
     nick_name = request.json.get("nick_name")
@@ -58,7 +58,7 @@ def pic_info():
     if not user:
         return abort(403)
     if request.method == "GET":
-        return render_template("user_pic_info.html", user=user.to_dict())
+        return render_template("user/user_pic_info.html", user=user.to_dict())
 
     try:
         img_bytes = request.files.get("avatar").read()
@@ -87,7 +87,7 @@ def pass_info():
     if not user:
         return abort(403)
     if request.method == "GET":
-        return render_template("user_pass_info.html", user=user.to_dict())
+        return render_template("user/user_pass_info.html", user=user.to_dict())
 
     old_password = request.json.get("old_password")
     new_password = request.json.get("new_password")
@@ -133,7 +133,7 @@ def collection():
         "cur_page": cur_page,
         "total_page": total_page
     }
-    return render_template("user_collection.html", data=data)
+    return render_template("user/user_collection.html", data=data)
 
 
 @user_blu.route('/news_release', methods=["GET", "POST"])
@@ -156,7 +156,7 @@ def news_release():
         if len(categories):
             categories.pop(0)
 
-        return render_template("user_news_release.html", categories=categories)
+        return render_template("user/user_news_release.html", categories=categories)
 
     # 获取参数
     title = request.form.get("title")
@@ -194,7 +194,7 @@ def news_release():
     return jsonify(errno=RET.OK, errmsg=error_map[RET.OK])
 
 
-@user_blu.route('news_list')
+@user_blu.route('/news_list')
 @user_login_data
 def news_list():
     user = g.user
@@ -208,6 +208,7 @@ def news_list():
         p = int(p)
     except BaseException as e:
         current_app.logger.error(e)
+        return abort(403)
 
     # 查询当前用户收藏的所有页码,指定页码
     news_list = []
@@ -220,14 +221,13 @@ def news_list():
         total_page = pn.pages
     except BaseException as e:
         current_app.logger.error(e)
-        return jsonify(errno=RET.DBERR, errmsg=error_map[RET.DBERR])
 
     data = {
         "news_list": news_list,
         "cur_page": cur_page,
         "total_page": total_page
     }
-    return render_template("user_news_list.html", data=data)
+    return render_template("user/user_news_list.html", data=data)
 
 
 

@@ -35,7 +35,7 @@ def index():
         current_app.logger.error(e)
 
     # 将用户信息传入模板,进行模板渲染
-    return render_template("index.html", user=user, news_list=news_list, categories=categories)
+    return render_template("news/index.html", user=user, news_list=news_list, categories=categories)
 
 
 @home_blu.route('/favicon.ico')
@@ -63,7 +63,7 @@ def get_news_list():
         return jsonify(error=RET.PARAMERR, errmsg=error_map[RET.PARAMERR])
 
     # 判断分类id是否等于1
-    filter_list = []
+    filter_list = [News.status == 0]
     if cid != 1:
         filter_list.append(News.category_id == cid)
 

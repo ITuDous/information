@@ -61,7 +61,7 @@ def news_detail(news_id):
     user = user.to_dict() if user else None
 
     # 将数据传入模板, 进行模板渲染
-    return render_template("detail.html", news=news.to_dict(), news_list=news_list, user=user, is_collect=is_collect,
+    return render_template("news/detail.html", news=news.to_dict(), news_list=news_list, user=user, is_collect=is_collect,
                            comments=comment_list)
 
 
